@@ -6,3 +6,28 @@ body {
 a {
   color: #00B7FF;
 }
+
+.btn-warning {
+  color: #FFFFFF;
+}
+
+.fa-times-circle-o {
+  font-size:22px;
+  color:#FDC02F;
+}
+
+.city-name {
+  margin-top: 15px;
+}
+
+.city-delete {
+  margin-top: 15px;
+}
+
+.badge-warning {
+  color: #FFFFFF;
+}
+
+#map {
+  height:300px;
+}
