@@ -11,17 +11,18 @@
 
     <div class="container">
       <div class="row">
-       <div class="offset-2 col-8 text-right">
-          Bonjour <%= user.name %>
+       <div class="message offset-2 col-8 text-right">
+          Hello <%= user.name %>
+          <a href="/logout" class="btn btn-outline-info btn-sm">Logout</a>
        </div>
 
         <div class="offset-2 col-8">
           <form action="/add-city" method="POST" class="form-inline">
             <div class="form-group mx-sm-3 mb-2">
-              <label for="city">Ville</label>
-              <input type="text" class="form-control" name="city" id="city" placeholder="Paris, Lyon ..">
+              <label for="city" id="labelCity">City</label>
+              <input type="text" class="form-control" name="city"  placeholder="Paris, Lyon ..">
             </div>
-            <button type="submit" class="btn btn-warning mb-2">Enregistrer</button>
+            <button type="submit" class="btn btn-warning mb-2">Save</button>
           </form>
         </div>
 

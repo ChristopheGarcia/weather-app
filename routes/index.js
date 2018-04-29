@@ -4,7 +4,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 
 var options = { server: { socketOptions: {connectTimeoutMS: 5000 } }};
-mongoose.connect('mongodb://noel:azerty@ds141351.mlab.com:41351/openweatherapp',
+mongoose.connect('mongodb://christopheg:christopheg@ds121088.mlab.com:21088/openweatherapp',
     options,
     function(err) {
      console.log(err);
@@ -87,6 +87,12 @@ router.post('/login', function(req, res, next) {
   )
 
 });
+
+router.get('/logout', function(req, res, next) {
+  req.session.user = null;
+  res.render('login');
+});
+
 
 router.get('/view-city', function(req, res, next) {
   CityModel.find(
