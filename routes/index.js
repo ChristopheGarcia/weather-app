@@ -1,17 +1,17 @@
-var request = require('request');
-var express = require('express');
-var router = express.Router();
-var mongoose = require('mongoose');
+const request = require('request');
+const express = require('express');
+const router = express.Router();
+const mongoose = require('mongoose');
 
-var options = { server: { socketOptions: {connectTimeoutMS: 5000 } }};
+const options = { server: { socketOptions: {connectTimeoutMS: 5000 } }};
 mongoose.connect('mongodb://christopheg:christopheg@ds121088.mlab.com:21088/openweatherapp',
     options,
-    function(err) {
+    (err) => {
      console.log(err);
     }
 );
 
-var citySchema = mongoose.Schema({
+const citySchema = mongoose.Schema({
     name: String,
     desc: String,
     icon: String,
@@ -21,39 +21,38 @@ var citySchema = mongoose.Schema({
     lon: Number,
     lat: Number
 });
-var CityModel = mongoose.model('cities', citySchema);
+const CityModel = mongoose.model('cities', citySchema);
 
-var userSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
     name: String,
     email: String,
     password: String
 });
-var UserModel = mongoose.model('users', userSchema);
+const UserModel = mongoose.model('users', userSchema);
 
 //var cityList = [];
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
   res.render('login');
 });
 
-router.post('/signup', function(req, res, next) {
+router.post('/signup', (req, res, next) => {
 
   UserModel.find(
       { email: req.body.email},
-      function (err, users) {
+       (err, users) => {
         if(users.length == 0) {
 
-        var newUser = new UserModel ({
+        let newUser = new UserModel ({
          name: req.body.name,
          email: req.body.email,
          password: req.body.password
         });
-        newUser.save(
-          function (error, user) {
+        newUser.save((error, user) => {
             req.session.user = user;
             CityModel.find(
                  {user_id: req.session.user._id},
-                 function (error, cityList) {
+                  (error, cityList) => {
                    res.render('index', { cityList, user : req.session.user });
                  }
              )
@@ -66,17 +65,17 @@ router.post('/signup', function(req, res, next) {
   );
 });
 
-router.post('/login', function(req, res, next) {
+router.post('/login', (req, res, next) => {
 
   UserModel.find(
       { email: req.body.email, password: req.body.password} ,
-      function (err, users) {
+       (err, users) => {
         if(users.length > 0) {
           req.session.user = users[0];
           CityModel.find(
                {user_id: req.session.user._id},
-               function (error, cityList) {
-                 console.log(cityList);
+                (error, cityList) => {
+                //  console.log(cityList);
                  res.render('index', { cityList, user : req.session.user });
                }
            )
@@ -88,29 +87,29 @@ router.post('/login', function(req, res, next) {
 
 });
 
-router.get('/logout', function(req, res, next) {
+router.get('/logout', (req, res, next) => {
   req.session.user = null;
   res.render('login');
 });
 
 
-router.get('/view-city', function(req, res, next) {
+router.get('/view-city', (req, res, next) => {
   CityModel.find(
        {user_id: req.session.user._id},
-       function (error, cityList) {
-         console.log(cityList);
+        (error, cityList) => {
+        //  console.log(cityList);
          res.render('index', { cityList, user : req.session.user });
        }
    )
 });
 
-router.post('/add-city', function(req, res, next) {
+router.post('/add-city', (req, res, next) => {
   request("http://api.openweathermap.org/data/2.5/weather?q="+req.body.city+"&appid=9b754f1f40051783e4f72c176953866e&units=metric&lang=fr", function(error, response, body) {
      body = JSON.parse(body);
      //var city = {name: body.name, desc: body.weather[0].description, icon: "http://openweathermap.org/img/w/"+body.weather[0].icon+".png", temp_min: body.main.temp_min+"°C", temp_max: body.main.temp_max+"°C"};
      //cityList.push(city);
 
-     var newCity = new CityModel ({
+     let newCity = new CityModel ({
        name: body.name,
        desc: body.weather[0].description,
        icon: "http://openweathermap.org/img/w/"+body.weather[0].icon+".png",
@@ -120,11 +119,10 @@ router.post('/add-city', function(req, res, next) {
        lon: body.coord.lon,
        lat: body.coord.lat
      });
-     newCity.save(
-       function (error, city) {
+     newCity.save((error, city) => {
          CityModel.find(
            {user_id: req.session.user._id},
-            function (error, cityList) {
+             (error, cityList) => {
               res.render('index', { cityList, user : req.session.user });
             }
           )
@@ -135,14 +133,14 @@ router.post('/add-city', function(req, res, next) {
 
 });
 
-router.get('/delete-city', function(req, res, next) {
+router.get('/delete-city', (req, res, next) => {
   //cityList.splice(req.query.position, 1);
   CityModel.remove(
       { _id: req.query.id},
-      function(error) {
+      (error) => {
         CityModel.find(
           {user_id: req.session.user._id},
-             function (error, cityList) {
+              (error, cityList) => {
                res.render('index', { cityList, user : req.session.user });
              }
          )
