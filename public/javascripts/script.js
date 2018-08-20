@@ -1,22 +1,23 @@
 function initMap() {
-  var uluru = {lat: 48.86, lng: 2.35};
-  var map = new google.maps.Map(document.getElementById('map'), {
+  const uluru = {lat: 48.86, lng: 2.35};
+  const map = new google.maps.Map(document.getElementById('map'), {
     zoom: 3,
     center: uluru
   });
 
-   var cityLat = document.getElementsByClassName("city-lat");
-   for(var i=0; i<document.getElementsByClassName("city-lon").length; i++ ){
+   const cityLat = document.getElementsByClassName("city-lat");
+   const cityLon = document.getElementsByClassName("city-lon");
+   for(let i=0; i<cityLon.length; i++ ){
 
-     var marker = new google.maps.Marker({
-       position: {lat: parseFloat(cityLat[i].value), lng: parseFloat(document.getElementsByClassName("city-lon")[i].value)},
+     let marker = new google.maps.Marker({
+       position: {lat: parseFloat(cityLat[i].value), lng: parseFloat(cityLon[i].value)},
        map: map
      });
    }
 
 
-  var input = document.getElementById('city');
-  var options = {
+  const input = document.getElementById('city');
+  const options = {
     types: ['geocode']
   };
   autocomplete = new google.maps.places.Autocomplete(input, options);
